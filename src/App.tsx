@@ -105,46 +105,71 @@ function App() {
 
           <hr className="my-12 border-gray-300" /> {/* Visual separator */}
 
-          <div className="mb-8" id="table-coparticipacao"> {/* Changed id to be more specific */}
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Tabela de Coparticipação
-            </h2>
-            <p className="text-gray-600">
-              Consulte os valores de coparticipação para todos os procedimentos médicos disponíveis nos planos Sami.
-            </p>
-          </div>
-
-          {/* Filters for Procedures Table - already existing */}
-          <Filters
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            classifications={classifications}
-            plans={plans} // This plans is derived from procedureData, might need adjustment if global plan filter is desired
-          />
-
-          <div className="mb-4 text-sm text-gray-500">
-            {loading ? (
-              "Carregando dados de procedimentos..."
-            ) : (
-              `Exibindo ${filteredData.length} de ${data.length} procedimentos`
-            )}
-            {partnersLoading && <p className="text-sm text-gray-500 mt-1">Carregando dados de parceiros...</p>}
-            {!partnersLoading && partnersError && <p className="text-sm text-red-500 mt-1">{partnersError}</p>}
-            {/* Removed partner count from here as it's implicitly shown by the tables themselves */}
-          </div>
-
-          <Table data={filteredData} isLoading={loading} />
-
-          {!loading && filteredData.length > 10 && (
-            <div className="mt-8 text-center">
-              <a
-                href="#table"
-                className="inline-flex items-center text-sm text-[#FF5A5F] hover:underline"
-              >
-                Voltar ao topo
-              </a>
+          <div className="my-12 scroll-mt-20" id="coparticipacao-section">
+            <div className="w-full">
+              <h2 className="text-3xl font-bold text-[#FF5A5F] mb-4">
+                Tabela de Coparticipação
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Consulte os valores de coparticipação para todos os procedimentos médicos disponíveis nos planos Sami.
+              </p>
+              
+              <h3 className="text-2xl font-bold text-[#FF5A5F] mb-4">
+                Entendendo a Coparticipação
+              </h3>
+              <p className="mb-4 text-gray-600 leading-relaxed">
+                A Coparticipação é um valor pago pelo beneficiário de um plano de saúde quando realiza algum
+                procedimento. Em um plano com coparticipação, você paga uma mensalidade menor que a de um plano
+                convencional mais uma taxa para cada procedimento realizado que vem na fatura do plano. Esse valor
+                pode ser cobrado em um prazo de 60 a 180 dias. Para maior segurança do membro, existe um limite de
+                cobrança definido por lei, conhecido como Limitador de Coparticipação.
+              </p>
+              <h4 className="text-xl font-semibold text-[#FF5A5F] mb-3">
+                Limitador de Coparticipação
+              </h4>
+              <p className="mb-4 text-gray-600 leading-relaxed">
+                O limitador é um valor máximo mensal estabelecido para realização de cada
+                procedimento em planos com coparticipação.
+              </p>
+              <p className="mb-8 text-gray-600 leading-relaxed">
+                Vale reforçar: o cálculo de quanto você pagará de coparticipação, é feito em cima de uma porcentagem de
+                20% até 40%, por serviço médico. No entanto, existe um limite de preço que não pode ultrapassar para cada
+                grupo de procedimento, sendo o valor mínimo de R$10 e valor máximo de R$80.
+              </p>
             </div>
-          )}
+
+            {/* Filters for Procedures Table - already existing */}
+            <Filters
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              classifications={classifications}
+              plans={plans} // This plans is derived from procedureData, might need adjustment if global plan filter is desired
+            />
+
+            <div className="mb-4 text-sm text-gray-500">
+              {loading ? (
+                "Carregando dados de procedimentos..."
+              ) : (
+                `Exibindo ${filteredData.length} de ${data.length} procedimentos`
+              )}
+              {partnersLoading && <p className="text-sm text-gray-500 mt-1">Carregando dados de parceiros...</p>}
+              {!partnersLoading && partnersError && <p className="text-sm text-red-500 mt-1">{partnersError}</p>}
+              {/* Removed partner count from here as it's implicitly shown by the tables themselves */}
+            </div>
+
+            <Table data={filteredData} isLoading={loading} />
+
+            {!loading && filteredData.length > 10 && (
+              <div className="mt-8 text-center">
+                <a
+                  href="#table"
+                  className="inline-flex items-center text-sm text-[#FF5A5F] hover:underline"
+                >
+                  Voltar ao topo
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>

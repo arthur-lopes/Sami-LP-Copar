@@ -6,18 +6,30 @@ const Hero: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            Tabela de Coparticipação Sami
+            Rede Credenciada e Coparticipação
           </h1>
           <p className="text-lg md:text-xl opacity-90 mb-6">
-            Transparência é um dos nossos valores. Confira abaixo todos os valores
+            Transparência é um dos nossos valores. Confira abaixo nossas rede credenciada junto a todos os valores
             de coparticipação para procedimentos médicos nos planos Sami.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <a 
-              href="#table" 
+              href="#hospitais-section" 
               className="inline-flex justify-center items-center px-6 py-3 bg-white text-[#FF5A5F] rounded-md font-medium hover:bg-gray-100 transition-colors"
             >
-              Ver tabela completa
+              Ver Hospitais
+            </a>
+            <a 
+              href="#laboratorios-section" 
+              className="inline-flex justify-center items-center px-6 py-3 bg-white text-[#FF5A5F] rounded-md font-medium hover:bg-gray-100 transition-colors"
+            >
+              Ver Laboratórios
+            </a>
+            <a 
+              href="#coparticipacao-section" 
+              className="inline-flex justify-center items-center px-6 py-3 bg-white text-[#FF5A5F] rounded-md font-medium hover:bg-gray-100 transition-colors"
+            >
+              Ver Tabela de Coparticipação
             </a>
           </div>
         </div>

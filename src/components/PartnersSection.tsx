@@ -62,16 +62,16 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
   return (
     <div className="my-12">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-3xl font-bold text-[#FF5A5F] mb-2">
           Rede Credenciada
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 mb-6">
           Consulte os hospitais e laboratórios disponíveis nos planos Sami.
         </p>
       </div>
 
       {/* Filtros e Tabela de Hospitais */}
-      <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+      <div id="hospitais-section" className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm scroll-mt-20">
         <h4 className="text-lg font-semibold text-gray-700 mb-3">Filtrar Hospitais</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -108,7 +108,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       <PartnerTable data={hospitalData} title="Hospitais" isLoading={isLoading} />
 
       {/* Filtros e Tabela de Laboratórios */}
-      <div className="mt-10 mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+      <div id="laboratorios-section" className="mt-10 mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm scroll-mt-20">
         <h4 className="text-lg font-semibold text-gray-700 mb-3">Filtrar Laboratórios</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
