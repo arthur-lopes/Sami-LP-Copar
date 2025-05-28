@@ -16,3 +16,10 @@ export interface FilterState {
   nomePlano: string[];
   searchQuery: string;
 }
+
+export interface PartnerData {
+  nomeParceiro: string;
+  tipo: string; // "Hospital" ou "Laboratório"
+  tipoRede: string;
+  nomePlano: string;
+}
