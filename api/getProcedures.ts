@@ -3,11 +3,11 @@ import axios from 'axios';
 
 interface ProcedureData {
   codigoProcedimento: string;
+  procedimento: string; // Corresponds to 'Procedimentos'
   classificacao: string;
   coparticipacao: boolean;
-  regraIsencao: string;
   percentualProcedimento: number;
-  preferencialCredenciada: string;
+  valorLimitador: string; // Corresponds to 'Valor Limitador', kept as string e.g., "R$ 20,00"
   nomePlano: string;
 }
 
@@ -25,14 +25,12 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
   // This makes it resilient to column order changes as long as headers are consistent
   const headerMap: { [key: string]: keyof ProcedureData } = {
     'Código': 'codigoProcedimento',
+    'Procedimentos': 'procedimento',
     'Classificação dos Procedimentos': 'classificacao',
     'Coparticipação Sim/Não': 'coparticipacao',
-    // 'Sua Coluna para Regra de Isenção': 'regraIsencao', // Descomente e ajuste se tiver esta coluna
     '% Valor do Procedimento': 'percentualProcedimento',
-    // 'Sua Coluna para Preferencial Credenciada': 'preferencialCredenciada', // Descomente e ajuste se tiver esta coluna
+    'Valor Limitador': 'valorLimitador',
     'Nome do Plano': 'nomePlano',
-    // O campo 'Procedimentos' e 'Valor Limitador' da sua planilha não estão sendo mapeados para ProcedureData atualmente.
-    // Se precisar deles, adicione-os à interface ProcedureData e ao headerMap.
   };
 
   return dataRows.map(row => {
@@ -45,13 +43,13 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
     });
 
     return {
-      codigoProcedimento: String(item.codigoProcedimento || ''),
-      classificacao: String(item.classificacao || ''),
-      coparticipacao: String(item.coparticipacao).toLowerCase() === 'true' || item.coparticipacao === true,
-      regraIsencao: String(item.regraIsencao || ''),
-      percentualProcedimento: Number(item.percentualProcedimento) || 0,
-      preferencialCredenciada: String(item.preferencialCredenciada || ''),
-      nomePlano: String(item.nomePlano || ''),
+      codigoProcedimento: String(item.codigoProcedimento || '').trim(),
+      procedimento: String(item.procedimento || '').trim(),
+      classificacao: String(item.classificacao || '').trim(),
+      coparticipacao: String(item.coparticipacao || '').trim().toLowerCase() === 'sim',
+      percentualProcedimento: parseFloat(String(item.percentualProcedimento || '0').replace('%', '')) || 0,
+      valorLimitador: String(item.valorLimitador || '').trim(),
+      nomePlano: String(item.nomePlano || '').trim(),
     } as ProcedureData;
   }).filter(item => item.codigoProcedimento); // Ensure at least codigoProcedimento is present
 };
