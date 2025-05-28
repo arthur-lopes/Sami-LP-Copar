@@ -13,13 +13,23 @@ interface ProcedureData {
 
 // Helper function to transform sheet data into ProcedureData array
 const formatSheetData = (values: any[][]): ProcedureData[] => {
+  console.log('[API LOG] formatSheetData called.');
   if (!values || values.length < 2) {
     // Expecting header row + data rows
     return [];
   }
 
+  console.log('[API LOG] Raw values length:', values.length);
+  if (values.length > 0) {
+    console.log('[API LOG] Raw header from sheet:', JSON.stringify(values[0]));
+  }
+  if (values.length > 1) {
+    console.log('[API LOG] First data row from sheet:', JSON.stringify(values[1]));
+  }
+
   const header = values[0].map(h => String(h).trim());
   const dataRows = values.slice(1);
+  console.log('[API LOG] Parsed header:', JSON.stringify(header));
 
   // Define a mapping from expected header names to ProcedureData keys
   // This makes it resilient to column order changes as long as headers are consistent
@@ -33,8 +43,9 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
     'Nome do Plano': 'nomePlano',
   };
 
-  return dataRows.map(row => {
+  const mappedData = dataRows.map(row => {
     const item: any = {};
+    // console.log(`[API LOG] Processing row: ${JSON.stringify(row)}`); // Log para cada linha (pode ser muito verboso)
     header.forEach((colName, index) => {
       const key = headerMap[colName] || colName; // Use mapped key or original if not in map
       if (key in headerMap) { // Only map recognized headers
@@ -42,7 +53,7 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
       }
     });
 
-    return {
+    const transformedItem = {
       codigoProcedimento: String(item.codigoProcedimento || '').trim(),
       procedimento: String(item.procedimento || '').trim(),
       classificacao: String(item.classificacao || '').trim(),
@@ -51,7 +62,21 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
       valorLimitador: String(item.valorLimitador || '').trim(),
       nomePlano: String(item.nomePlano || '').trim(),
     } as ProcedureData;
-  }).filter(item => item.codigoProcedimento); // Ensure at least codigoProcedimento is present
+    // console.log(`[API LOG] Transformed item: ${JSON.stringify(transformedItem)}`); // Log para cada item transformado
+    return transformedItem;
+  });
+
+  console.log('[API LOG] Number of items after map:', mappedData.length);
+  if (mappedData.length > 0) {
+    console.log('[API LOG] First item after map (before filter):', JSON.stringify(mappedData[0]));
+  }
+
+  const filteredData = mappedData.filter((item: ProcedureData) => item.codigoProcedimento && String(item.codigoProcedimento).trim() !== '');
+  console.log('[API LOG] Number of items after filter:', filteredData.length);
+  if (filteredData.length > 0) {
+    console.log('[API LOG] First item after filter:', JSON.stringify(filteredData[0]));
+  }
+  return filteredData;
 };
 
 export default async function handler(
@@ -78,7 +103,12 @@ export default async function handler(
       return response.status(404).json({ error: 'No data found in spreadsheet or range is invalid.' });
     }
 
+    console.log('[API LOG] Attempting to format sheet data...');
     const formattedData = formatSheetData(values);
+    console.log(`[API LOG] Formatted data ready to send. Count: ${formattedData.length}`);
+    if (formattedData.length > 0) {
+      console.log('[API LOG] First item of formattedData to send:', JSON.stringify(formattedData[0]));
+    }
     
     // Basic Caching Headers (Vercel specific or general)
     // Cache for 5 minutes on CDN, 1 hour on client browser
