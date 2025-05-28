@@ -29,11 +29,12 @@ export const filterData = (data: ProcedureData[], filters: FilterState): Procedu
       return false;
     }
     
-    // Search query (check in code, classification, and exemption rule)
+    // Search query (check in code, procedure name, classification, and exemption rule)
     if (filters.searchQuery) {
       const query = filters.searchQuery.toLowerCase();
       return (
         item.codigoProcedimento.toLowerCase().includes(query) ||
+        item.procedimento.toLowerCase().includes(query) ||
         item.classificacao.toLowerCase().includes(query) ||
         item.regraIsencao.toLowerCase().includes(query)
       );
