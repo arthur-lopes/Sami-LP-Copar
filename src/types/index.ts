@@ -1,9 +1,11 @@
 export interface ProcedureData {
   codigoProcedimento: string;
+  procedimento: string; // Added
   classificacao: string;
   coparticipacao: boolean;
   regraIsencao: string;
   percentualProcedimento: number;
+  valorLimitador: string; // Added
   preferencialCredenciada: string;
   nomePlano: string;
 }
