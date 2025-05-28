@@ -24,15 +24,15 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
   // Define a mapping from expected header names to ProcedureData keys
   // This makes it resilient to column order changes as long as headers are consistent
   const headerMap: { [key: string]: keyof ProcedureData } = {
-    'codigoProcedimento': 'codigoProcedimento',
-    'classificacao': 'classificacao',
-    'coparticipacao': 'coparticipacao',
-    'regraIsencao': 'regraIsencao',
-    'percentualProcedimento': 'percentualProcedimento',
-    'preferencialCredenciada': 'preferencialCredenciada',
-    'nomePlano': 'nomePlano',
-    // Add more mappings if your sheet headers are different
-    // e.g., 'Código do Procedimento': 'codigoProcedimento'
+    'Código': 'codigoProcedimento',
+    'Classificação dos Procedimentos': 'classificacao',
+    'Coparticipação Sim/Não': 'coparticipacao',
+    // 'Sua Coluna para Regra de Isenção': 'regraIsencao', // Descomente e ajuste se tiver esta coluna
+    '% Valor do Procedimento': 'percentualProcedimento',
+    // 'Sua Coluna para Preferencial Credenciada': 'preferencialCredenciada', // Descomente e ajuste se tiver esta coluna
+    'Nome do Plano': 'nomePlano',
+    // O campo 'Procedimentos' e 'Valor Limitador' da sua planilha não estão sendo mapeados para ProcedureData atualmente.
+    // Se precisar deles, adicione-os à interface ProcedureData e ao headerMap.
   };
 
   return dataRows.map(row => {
