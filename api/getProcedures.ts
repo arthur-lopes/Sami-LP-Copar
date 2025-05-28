@@ -6,8 +6,10 @@ interface ProcedureData {
   procedimento: string; // Corresponds to 'Procedimentos'
   classificacao: string;
   coparticipacao: boolean;
+  regraIsencao: string;
   percentualProcedimento: number;
-  valorLimitador: string; // Corresponds to 'Valor Limitador', kept as string e.g., "R$ 20,00"
+  valorLimitador: string; // Added back
+  preferencialCredenciada: string;
   nomePlano: string;
 }
 
@@ -38,8 +40,10 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
     'Procedimentos': 'procedimento',
     'Classificação dos Procedimentos': 'classificacao',
     'Coparticipação Sim/Não': 'coparticipacao',
+    'Regra de Isenção': 'regraIsencao',
     '% Valor do Procedimento': 'percentualProcedimento',
-    'Valor Limitador': 'valorLimitador',
+    'Valor Limitador': 'valorLimitador', // Added back
+    'Preferencial Credenciada': 'preferencialCredenciada',
     'Nome do Plano': 'nomePlano',
   };
 
@@ -58,8 +62,10 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
       procedimento: String(item.procedimento || '').trim(),
       classificacao: String(item.classificacao || '').trim(),
       coparticipacao: String(item.coparticipacao || '').trim().toLowerCase() === 'sim',
+      regraIsencao: String(item.regraIsencao || '').trim(),
       percentualProcedimento: parseFloat(String(item.percentualProcedimento || '0').replace('%', '')) || 0,
-      valorLimitador: String(item.valorLimitador || '').trim(),
+      valorLimitador: String(item.valorLimitador || '').trim(), // Added back
+      preferencialCredenciada: String(item.preferencialCredenciada || '').trim(),
       nomePlano: String(item.nomePlano || '').trim(),
     } as ProcedureData;
     // console.log(`[API LOG] Transformed item: ${JSON.stringify(transformedItem)}`); // Log para cada item transformado
