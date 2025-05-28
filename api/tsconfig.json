@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json", // Pode herdar configurações base se desejar, ou remover esta linha
+  "compilerOptions": {
+    "target": "ES2022", // Ou mais recente compatível com Node.js na Vercel
+    "module": "ESNext", // Garante output ES Module
+    "moduleResolution": "node", // Ou "bundler" se preferir, mas "node" é comum para ESM puro
+    "lib": ["ES2023"],
+    "outDir": "../.vercel/output/functions/api", // Vercel pode sobrescrever isso, mas é bom ter
+    "rootDir": ".",
+    "strict": true,
+    "esModuleInterop": true, // Ajuda com compatibilidade entre CommonJS e ES Modules
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true, // Vercel geralmente transpila arquivos individualmente
+    "noEmit": false // IMPORTANTE: Queremos que este tsconfig emita JS
+  },
+  "include": ["*.ts"], // Inclui todos os arquivos .ts na pasta api/
+  "exclude": ["node_modules"]
+}
