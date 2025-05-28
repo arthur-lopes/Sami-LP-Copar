@@ -89,18 +89,6 @@ function App() {
 
           {/* Filters for procedures are now placed after the procedure table title */}
 
-          <div className="mb-4 text-sm text-gray-500">
-            {loading ? (
-              "Carregando dados de procedimentos..."
-            ) : (
-              `Exibindo ${filteredData.length} de ${data.length} procedimentos`
-            )}
-            {/* Placeholder for partners loading/count */}
-            {partnersLoading && <p className="text-sm text-gray-500 mt-1">Carregando dados de parceiros...</p>}
-            {!partnersLoading && partnersError && <p className="text-sm text-red-500 mt-1">{partnersError}</p>}
-            {/* Partner count message removed, as tables will show counts or 'no data' messages */}
-          </div>
-
           <PartnersSection partnersData={partnersData} isLoading={partnersLoading} />
 
           <hr className="my-12 border-gray-300" /> {/* Visual separator */}
