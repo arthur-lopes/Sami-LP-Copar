@@ -47,9 +47,9 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
     const item: any = {};
     // console.log(`[API LOG] Processing row: ${JSON.stringify(row)}`); // Log para cada linha (pode ser muito verboso)
     header.forEach((colName, index) => {
-      const key = headerMap[colName] || colName; // Use mapped key or original if not in map
-      if (key in headerMap) { // Only map recognized headers
-        item[key] = row[index];
+      const mappedKey = headerMap[colName]; // Get the target key from our map, e.g., 'codigoProcedimento'
+      if (mappedKey) { // Check if colName (e.g., 'Código') exists as a key in headerMap
+        item[mappedKey] = row[index]; // Assign to item using the mapped key: item['codigoProcedimento'] = ...
       }
     });
 
