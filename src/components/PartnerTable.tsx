@@ -76,16 +76,19 @@ const PartnerTable: React.FC<PartnerTableProps> = ({ data, title, isLoading, emp
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('nomeParceiro')}>
                 <div className="flex items-center">Nome do Parceiro<SortIcon field="nomeParceiro" currentSortField={sortConfig?.key || null} direction={sortConfig?.direction || 'asc'} /></div>
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('tipoRede')}>
-                <div className="flex items-center">Tipo de Rede<SortIcon field="tipoRede" currentSortField={sortConfig?.key || null} direction={sortConfig?.direction || 'asc'} /></div>
-              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {sortedData.map((item, index) => (
               <tr key={`${item.nomeParceiro}-${item.nomePlano}-${index}`} className={`hover:bg-gray-50 transition-colors ${item.tipoRede === 'Preferencial' ? 'bg-green-50' : ''}`}>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${item.tipoRede === 'Preferencial' ? 'text-green-700 font-semibold' : 'text-gray-900'}`}>{item.nomeParceiro}</td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${item.tipoRede === 'Preferencial' ? 'text-green-600 font-medium' : 'text-gray-500'}`}>{item.tipoRede}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div className="flex items-center">
+                    <span className={`${item.tipoRede === 'Preferencial' ? 'text-green-700 font-semibold' : 'text-gray-900'}`}>{item.nomeParceiro}</span>
+                    <span className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.tipoRede === 'Preferencial' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                      {item.tipoRede}
+                    </span>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
