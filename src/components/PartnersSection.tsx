@@ -69,7 +69,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
     <div className="my-12">
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-[#FF5A5F] mb-2">
-          Rede Credenciada
+          Hospitais e Laboratórios
         </h2>
         <p className="text-gray-600 mb-6">
           Consulte os hospitais e laboratórios disponíveis nos planos Sami.

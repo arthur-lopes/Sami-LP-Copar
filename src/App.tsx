@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import Header from './components/Header';
 import Hero from './components/Hero';
 import Filters from './components/Filters';
 import Table from './components/Table';
 import PartnersSection from './components/PartnersSection';
+import Footer from './components/Footer';
 import { fetchProcedureData, fetchPartnersData } from './services/api';
 import { getUniqueValues, filterData } from './utils/filterUtils';
 import { FilterState, ProcedureData, PartnerData } from './types';
@@ -14,6 +17,7 @@ function App() {
   const [partnersLoading, setPartnersLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); // For procedures
   const [partnersError, setPartnersError] = useState<string | null>(null);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     classificacao: [],
     coparticipacao: null,
@@ -68,6 +72,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header />
       <Hero />
       
       <main className="flex-grow py-8 sm:py-12">
@@ -95,35 +100,52 @@ function App() {
 
           <div className="my-12 scroll-mt-20" id="coparticipacao-section">
             <div className="w-full">
-              <h2 className="text-3xl font-bold text-[#FF5A5F] mb-4">
+              <h2 className="text-3xl font-bold text-[#FF5751] mb-4">
                 Tabela de Coparticipação
               </h2>
               <p className="text-gray-600 mb-6">
                 Consulte os valores de coparticipação para todos os procedimentos médicos disponíveis nos planos Sami.
               </p>
               
-              <h3 className="text-2xl font-bold text-[#FF5A5F] mb-4">
-                Entendendo a Coparticipação
-              </h3>
-              <p className="mb-4 text-gray-600 leading-relaxed">
-                A Coparticipação é um valor pago pelo beneficiário de um plano de saúde quando realiza algum
-                procedimento. Em um plano com coparticipação, você paga uma mensalidade menor que a de um plano
-                convencional mais uma taxa para cada procedimento realizado que vem na fatura do plano. Esse valor
-                pode ser cobrado em um prazo de 60 a 180 dias. Para maior segurança do membro, existe um limite de
-                cobrança definido por lei, conhecido como Limitador de Coparticipação.
-              </p>
-              <h4 className="text-xl font-semibold text-[#FF5A5F] mb-3">
-                Limitador de Coparticipação
-              </h4>
-              <p className="mb-4 text-gray-600 leading-relaxed">
-                O limitador é um valor máximo mensal estabelecido para realização de cada
-                procedimento em planos com coparticipação.
-              </p>
-              <p className="mb-8 text-gray-600 leading-relaxed">
-                Vale reforçar: o cálculo de quanto você pagará de coparticipação, é feito em cima de uma porcentagem de
-                20% até 40%, por serviço médico. No entanto, existe um limite de preço que não pode ultrapassar para cada
-                grupo de procedimento, sendo o valor mínimo de R$10 e valor máximo de R$80.
-              </p>
+              {/* Accordion for Coparticipation Explanation */}
+              <div className="mb-8">
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <button 
+                    className="w-full bg-white p-4 flex items-center justify-between font-medium text-left focus:outline-none"
+                    onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+                  >
+                    <span className="text-lg font-semibold text-[#333333]">Entendendo a Coparticipação</span>
+                    {isAccordionOpen ? 
+                      <ChevronUp className="h-5 w-5 text-[#FF5751]" /> : 
+                      <ChevronDown className="h-5 w-5 text-[#FF5751]" />
+                    }
+                  </button>
+                  
+                  {isAccordionOpen && (
+                    <div className="bg-white p-4 border-t border-gray-200">
+                      <p className="mb-4 text-gray-600 leading-relaxed">
+                        A Coparticipação é um valor pago pelo beneficiário de um plano de saúde quando realiza algum
+                        procedimento. Em um plano com coparticipação, você paga uma mensalidade menor que a de um plano
+                        convencional mais uma taxa para cada procedimento realizado que vem na fatura do plano. Esse valor
+                        pode ser cobrado em um prazo de 60 a 180 dias. Para maior segurança do membro, existe um limite de
+                        cobrança definido por lei, conhecido como Limitador de Coparticipação.
+                      </p>
+                      <h4 className="text-lg font-semibold text-[#FF5751] mb-3">
+                        Limitador de Coparticipação
+                      </h4>
+                      <p className="mb-4 text-gray-600 leading-relaxed">
+                        O limitador é um valor máximo mensal estabelecido para realização de cada
+                        procedimento em planos com coparticipação.
+                      </p>
+                      <p className="mb-0 text-gray-600 leading-relaxed">
+                        Vale reforçar: o cálculo de quanto você pagará de coparticipação, é feito em cima de uma porcentagem de
+                        20% até 40%, por serviço médico. No entanto, existe um limite de preço que não pode ultrapassar para cada
+                        grupo de procedimento, sendo o valor mínimo de R$10 e valor máximo de R$80.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Filters for Procedures Table - already existing */}
@@ -156,7 +178,7 @@ function App() {
               <div className="mt-8 text-center">
                 <a
                   href="#table"
-                  className="inline-flex items-center text-sm text-[#FF5A5F] hover:underline"
+                  className="inline-flex items-center text-sm text-[#FF5751] hover:underline"
                 >
                   Voltar ao topo
                 </a>
@@ -165,6 +187,7 @@ function App() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
