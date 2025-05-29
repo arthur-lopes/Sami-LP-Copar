@@ -152,7 +152,7 @@ const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessa
               )}
               {columnsWithValues.coparticipacao && (
                 <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('coparticipacao')}>
-                  <div className="flex items-center"><span>Coparticipação Sim/Não</span><SortIcon field="coparticipacao" /></div>
+                  <div className="flex items-center"><span>Copart</span><SortIcon field="coparticipacao" /></div>
                 </th>
               )}
               {columnsWithValues.regraIsencao && (
@@ -184,7 +184,13 @@ const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessa
                   <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.codigoProcedimento}</td>
                 )}
                 {columnsWithValues.procedimento && (
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.procedimento}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900">
+                    {item.procedimento.split(' ').length > 3 ? (
+                      <div className="whitespace-normal">{item.procedimento}</div>
+                    ) : (
+                      <div className="whitespace-nowrap">{item.procedimento}</div>
+                    )}
+                  </td>
                 )}
                 {columnsWithValues.classificacao && (
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.classificacao}</td>
