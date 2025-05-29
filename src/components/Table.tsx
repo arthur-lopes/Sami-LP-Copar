@@ -31,13 +31,22 @@ const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessa
     
     // Initialize all columns as having no values
     Object.keys(data[0] || {}).forEach(key => {
-      columns[key as keyof ProcedureData] = false;
+      // Always hide the nomePlano column
+      if (key === 'nomePlano') {
+        columns[key as keyof ProcedureData] = false;
+      } else {
+        columns[key as keyof ProcedureData] = false;
+      }
     });
     
     // Check each column for non-empty values
     data.forEach(item => {
       Object.entries(item).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        // Skip the nomePlano column
+        if (key === 'nomePlano') return;
+        
+        // For other columns, check if they have values
+        if (value !== undefined && value !== null && value !== '' && value !== 0) {
           columns[key as keyof ProcedureData] = true;
         }
       });
@@ -155,7 +164,7 @@ const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessa
               )}
               {columnsWithValues.preferencialCredenciada && (
                 <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('preferencialCredenciada')}>
-                  <div className="flex items-center"><span>Preferencial Credenciada</span><SortIcon field="preferencialCredenciada" /></div>
+                  <div className="flex items-center"><span>Valor Rede Preferencial</span><SortIcon field="preferencialCredenciada" /></div>
                 </th>
               )}
             </tr>
