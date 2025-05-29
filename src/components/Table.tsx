@@ -46,7 +46,15 @@ const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessa
         if (key === 'nomePlano') return;
         
         // For other columns, check if they have values
-        if (value !== undefined && value !== null && value !== '' && value !== 0) {
+        // Check if the value is not empty, null, undefined, or zero
+        // For strings that might represent numbers (like "0", "0.0"), convert to number first
+        const numericValue = typeof value === 'string' ? parseFloat(value) : value;
+        if (
+          value !== undefined && 
+          value !== null && 
+          value !== '' && 
+          (typeof numericValue !== 'number' || numericValue !== 0)
+        ) {
           columns[key as keyof ProcedureData] = true;
         }
       });
