@@ -145,7 +145,12 @@ function App() {
               {/* Removed partner count from here as it's implicitly shown by the tables themselves */}
             </div>
 
-            <Table data={filteredData} isLoading={loading} />
+            <Table 
+              data={filteredData} 
+              isLoading={loading} 
+              selectedPlan={filters.nomePlano.length > 0 ? filters.nomePlano[0] : undefined}
+              emptyMessage="Selecione um plano para visualizar os procedimentos disponíveis."
+            />
 
             {!loading && filteredData.length > 10 && (
               <div className="mt-8 text-center">

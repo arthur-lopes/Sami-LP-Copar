@@ -5,12 +5,14 @@ import { ProcedureData } from '../types';
 interface TableProps {
   data: ProcedureData[];
   isLoading: boolean;
+  selectedPlan?: string; // Added to track if a plan is selected
+  emptyMessage?: string; // Custom message when no data or no plan selected
 }
 
 type SortField = keyof ProcedureData | null;
 type SortDirection = 'asc' | 'desc';
 
-const Table: React.FC<TableProps> = ({ data, isLoading }) => {
+const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessage }) => {
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -22,6 +24,27 @@ const Table: React.FC<TableProps> = ({ data, isLoading }) => {
       setSortDirection('asc');
     }
   };
+
+  // Check if any column has all blank values
+  const columnsWithValues = React.useMemo(() => {
+    const columns: Record<keyof ProcedureData, boolean> = {} as Record<keyof ProcedureData, boolean>;
+    
+    // Initialize all columns as having no values
+    Object.keys(data[0] || {}).forEach(key => {
+      columns[key as keyof ProcedureData] = false;
+    });
+    
+    // Check each column for non-empty values
+    data.forEach(item => {
+      Object.entries(item).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          columns[key as keyof ProcedureData] = true;
+        }
+      });
+    });
+    
+    return columns;
+  }, [data]);
 
   const sortedData = React.useMemo(() => {
     if (!sortField) return data;
@@ -71,6 +94,15 @@ const Table: React.FC<TableProps> = ({ data, isLoading }) => {
     );
   }
 
+  // If no plan is selected, show a message
+  if (!selectedPlan) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+        <p className="text-gray-500">{emptyMessage || "Selecione um plano para visualizar os procedimentos disponíveis."}</p>
+      </div>
+    );
+  }
+  
   if (data.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -86,57 +118,81 @@ const Table: React.FC<TableProps> = ({ data, isLoading }) => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('codigoProcedimento')}>
-                <div className="flex items-center"><span>Código</span><SortIcon field="codigoProcedimento" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('procedimento')}>
-                <div className="flex items-center"><span>Procedimentos</span><SortIcon field="procedimento" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('classificacao')}>
-                <div className="flex items-center"><span>Classificação dos Procedimentos</span><SortIcon field="classificacao" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('coparticipacao')}>
-                <div className="flex items-center"><span>Coparticipação Sim/Não</span><SortIcon field="coparticipacao" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('regraIsencao')}>
-                <div className="flex items-center"><span>Regra de Isenção</span><SortIcon field="regraIsencao" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('percentualProcedimento')}>
-                <div className="flex items-center"><span>% Valor do Procedimento</span><SortIcon field="percentualProcedimento" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('valorLimitador')}>
-                <div className="flex items-center"><span>Valor Limitador</span><SortIcon field="valorLimitador" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('preferencialCredenciada')}>
-                <div className="flex items-center"><span>Preferencial Credenciada</span><SortIcon field="preferencialCredenciada" /></div>
-              </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('nomePlano')}>
-                <div className="flex items-center"><span>Nome do Plano</span><SortIcon field="nomePlano" /></div>
-              </th>
+              {columnsWithValues.codigoProcedimento && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('codigoProcedimento')}>
+                  <div className="flex items-center"><span>Código</span><SortIcon field="codigoProcedimento" /></div>
+                </th>
+              )}
+              {columnsWithValues.procedimento && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('procedimento')}>
+                  <div className="flex items-center"><span>Procedimentos</span><SortIcon field="procedimento" /></div>
+                </th>
+              )}
+              {columnsWithValues.classificacao && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('classificacao')}>
+                  <div className="flex items-center"><span>Classificação dos Procedimentos</span><SortIcon field="classificacao" /></div>
+                </th>
+              )}
+              {columnsWithValues.coparticipacao && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('coparticipacao')}>
+                  <div className="flex items-center"><span>Coparticipação Sim/Não</span><SortIcon field="coparticipacao" /></div>
+                </th>
+              )}
+              {columnsWithValues.regraIsencao && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('regraIsencao')}>
+                  <div className="flex items-center"><span>Regra de Isenção</span><SortIcon field="regraIsencao" /></div>
+                </th>
+              )}
+              {columnsWithValues.percentualProcedimento && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('percentualProcedimento')}>
+                  <div className="flex items-center"><span>% Valor do Procedimento</span><SortIcon field="percentualProcedimento" /></div>
+                </th>
+              )}
+              {columnsWithValues.valorLimitador && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('valorLimitador')}>
+                  <div className="flex items-center"><span>Valor Limitador</span><SortIcon field="valorLimitador" /></div>
+                </th>
+              )}
+              {columnsWithValues.preferencialCredenciada && (
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('preferencialCredenciada')}>
+                  <div className="flex items-center"><span>Preferencial Credenciada</span><SortIcon field="preferencialCredenciada" /></div>
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {sortedData.map((item, index) => (
               <tr key={`${item.codigoProcedimento}-${index}-${item.nomePlano}`} className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.codigoProcedimento}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.procedimento}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.classificacao}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.coparticipacao ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
-                    {item.coparticipacao ? 'Sim' : 'Não'}
-                  </span>
-                </td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.regraIsencao}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {item.percentualProcedimento > 0 ? `${item.percentualProcedimento}%` : '-'}
-                </td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.valorLimitador}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.preferencialCredenciada}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.nomePlano.includes('Premium') ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
-                    {item.nomePlano}
-                  </span>
-                </td>
+                {columnsWithValues.codigoProcedimento && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.codigoProcedimento}</td>
+                )}
+                {columnsWithValues.procedimento && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.procedimento}</td>
+                )}
+                {columnsWithValues.classificacao && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.classificacao}</td>
+                )}
+                {columnsWithValues.coparticipacao && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.coparticipacao ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                      {item.coparticipacao ? 'Sim' : 'Não'}
+                    </span>
+                  </td>
+                )}
+                {columnsWithValues.regraIsencao && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.regraIsencao}</td>
+                )}
+                {columnsWithValues.percentualProcedimento && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {item.percentualProcedimento > 0 ? `${item.percentualProcedimento}%` : '-'}
+                  </td>
+                )}
+                {columnsWithValues.valorLimitador && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.valorLimitador}</td>
+                )}
+                {columnsWithValues.preferencialCredenciada && (
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{item.preferencialCredenciada}</td>
+                )}
               </tr>
             ))}
           </tbody>
