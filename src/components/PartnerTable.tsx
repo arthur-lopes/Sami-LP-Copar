@@ -5,6 +5,7 @@ interface PartnerTableProps {
   data: PartnerData[];
   title: string;
   isLoading: boolean;
+  emptyMessage?: string; // Custom message to display when no data is available
   // Add other props like filters if they become specific to this table
 }
 
@@ -15,7 +16,7 @@ const SortIcon: React.FC<{ field: keyof PartnerData | null, currentSortField: ke
   return <span className="ml-1">{direction === 'asc' ? '▲' : '▼'}</span>;
 };
 
-const PartnerTable: React.FC<PartnerTableProps> = ({ data, title, isLoading }) => {
+const PartnerTable: React.FC<PartnerTableProps> = ({ data, title, isLoading, emptyMessage }) => {
   const [sortConfig, setSortConfig] = useState<{ key: keyof PartnerData; direction: 'asc' | 'desc' } | null>({ key: 'nomeParceiro', direction: 'asc' });
 
   const sortedData = useMemo(() => {
@@ -60,7 +61,7 @@ const PartnerTable: React.FC<PartnerTableProps> = ({ data, title, isLoading }) =
     return (
       <div className="mt-8">
         <h3 className="text-xl font-semibold text-gray-800 mb-4">{title}</h3>
-        <p className="text-gray-600">Nenhum dado encontrado para {title.toLowerCase()}.</p>
+        <p className="text-gray-600">{emptyMessage || `Nenhum dado encontrado para ${title.toLowerCase()}.`}</p>
       </div>
     );
   }
@@ -78,9 +79,6 @@ const PartnerTable: React.FC<PartnerTableProps> = ({ data, title, isLoading }) =
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('tipoRede')}>
                 <div className="flex items-center">Tipo de Rede<SortIcon field="tipoRede" currentSortField={sortConfig?.key || null} direction={sortConfig?.direction || 'asc'} /></div>
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onClick={() => handleSort('nomePlano')}>
-                <div className="flex items-center">Nome do Plano<SortIcon field="nomePlano" currentSortField={sortConfig?.key || null} direction={sortConfig?.direction || 'asc'} /></div>
-              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -88,7 +86,6 @@ const PartnerTable: React.FC<PartnerTableProps> = ({ data, title, isLoading }) =
               <tr key={`${item.nomeParceiro}-${item.nomePlano}-${index}`} className={`hover:bg-gray-50 transition-colors ${item.tipoRede === 'Preferencial' ? 'bg-green-50' : ''}`}>
                 <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${item.tipoRede === 'Preferencial' ? 'text-green-700 font-semibold' : 'text-gray-900'}`}>{item.nomeParceiro}</td>
                 <td className={`px-6 py-4 whitespace-nowrap text-sm ${item.tipoRede === 'Preferencial' ? 'text-green-600 font-medium' : 'text-gray-500'}`}>{item.tipoRede}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.nomePlano}</td>
               </tr>
             ))}
           </tbody>

@@ -28,12 +28,15 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
   }, [partnersData]);
 
   const hospitalData = useMemo(() => {
+    // Only show hospital data if a plan is selected
+    if (hospitalSelectedPlanOptions.length === 0) {
+      return [];
+    }
+    
     let hospitals = partnersData.filter(p => p.tipo.toLowerCase() === 'hospital');
 
-    if (hospitalSelectedPlanOptions.length > 0) {
-      const planValues = hospitalSelectedPlanOptions.map((opt: OptionType) => opt.value);
-      hospitals = hospitals.filter(hospital => planValues.includes(hospital.nomePlano));
-    }
+    const planValues = hospitalSelectedPlanOptions.map((opt: OptionType) => opt.value);
+    hospitals = hospitals.filter(hospital => planValues.includes(hospital.nomePlano));
 
     if (hospitalNameQuery.trim() !== '') {
       hospitals = hospitals.filter(hospital =>
@@ -44,12 +47,15 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
   }, [partnersData, hospitalSelectedPlanOptions, hospitalNameQuery]);
 
   const laboratoryData = useMemo(() => {
+    // Only show laboratory data if a plan is selected
+    if (laboratorySelectedPlanOptions.length === 0) {
+      return [];
+    }
+    
     let laboratories = partnersData.filter(p => p.tipo.toLowerCase() === 'laboratório' || p.tipo.toLowerCase() === 'laboratorio');
 
-    if (laboratorySelectedPlanOptions.length > 0) {
-      const planValues = laboratorySelectedPlanOptions.map((opt: OptionType) => opt.value);
-      laboratories = laboratories.filter(lab => planValues.includes(lab.nomePlano));
-    }
+    const planValues = laboratorySelectedPlanOptions.map((opt: OptionType) => opt.value);
+    laboratories = laboratories.filter(lab => planValues.includes(lab.nomePlano));
 
     if (laboratoryNameQuery.trim() !== '') {
       laboratories = laboratories.filter(lab =>
@@ -105,7 +111,12 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
           </div>
         </div>
       </div>
-      <PartnerTable data={hospitalData} title="Hospitais" isLoading={isLoading} />
+      <PartnerTable 
+        data={hospitalData} 
+        title="Hospitais" 
+        isLoading={isLoading} 
+        emptyMessage={hospitalSelectedPlanOptions.length === 0 ? "Selecione um plano para visualizar os hospitais disponíveis." : undefined}
+      />
 
       {/* Filtros e Tabela de Laboratórios */}
       <div id="laboratorios-section" className="mt-10 mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm scroll-mt-20">
@@ -142,7 +153,12 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
           </div>
         </div>
       </div>
-      <PartnerTable data={laboratoryData} title="Laboratórios" isLoading={isLoading} />
+      <PartnerTable 
+        data={laboratoryData} 
+        title="Laboratórios" 
+        isLoading={isLoading} 
+        emptyMessage={laboratorySelectedPlanOptions.length === 0 ? "Selecione um plano para visualizar os laboratórios disponíveis." : undefined}
+      />
     </div>
   );
 };
