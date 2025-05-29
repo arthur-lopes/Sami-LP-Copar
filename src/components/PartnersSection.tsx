@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { PartnerData } from '../types';
 import PartnerTable from './PartnerTable';
-import Select, { MultiValue } from 'react-select';
+import Select from 'react-select';
 
 interface PartnersSectionProps {
   partnersData: PartnerData[];
@@ -15,11 +15,13 @@ interface OptionType {
   label: string;
 }
 
+type SingleOptionType = OptionType | null;
+
 const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoading }) => {
   const [hospitalNameQuery, setHospitalNameQuery] = useState<string>('');
   const [laboratoryNameQuery, setLaboratoryNameQuery] = useState<string>('');
-  const [hospitalSelectedPlanOptions, setHospitalSelectedPlanOptions] = useState<MultiValue<OptionType>>([]);
-  const [laboratorySelectedPlanOptions, setLaboratorySelectedPlanOptions] = useState<MultiValue<OptionType>>([]);
+  const [hospitalSelectedPlanOption, setHospitalSelectedPlanOption] = useState<SingleOptionType>(null);
+  const [laboratorySelectedPlanOption, setLaboratorySelectedPlanOption] = useState<SingleOptionType>(null);
 
   const uniquePlansFromPartners = useMemo(() => {
     if (!partnersData) return [];
@@ -29,14 +31,14 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
 
   const hospitalData = useMemo(() => {
     // Only show hospital data if a plan is selected
-    if (hospitalSelectedPlanOptions.length === 0) {
+    if (!hospitalSelectedPlanOption) {
       return [];
     }
     
     let hospitals = partnersData.filter(p => p.tipo.toLowerCase() === 'hospital');
 
-    const planValues = hospitalSelectedPlanOptions.map((opt: OptionType) => opt.value);
-    hospitals = hospitals.filter(hospital => planValues.includes(hospital.nomePlano));
+    // Filter by the selected plan
+    hospitals = hospitals.filter(hospital => hospital.nomePlano === hospitalSelectedPlanOption.value);
 
     if (hospitalNameQuery.trim() !== '') {
       hospitals = hospitals.filter(hospital =>
@@ -44,18 +46,18 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       );
     }
     return hospitals;
-  }, [partnersData, hospitalSelectedPlanOptions, hospitalNameQuery]);
+  }, [partnersData, hospitalSelectedPlanOption, hospitalNameQuery]);
 
   const laboratoryData = useMemo(() => {
     // Only show laboratory data if a plan is selected
-    if (laboratorySelectedPlanOptions.length === 0) {
+    if (!laboratorySelectedPlanOption) {
       return [];
     }
     
     let laboratories = partnersData.filter(p => p.tipo.toLowerCase() === 'laboratório' || p.tipo.toLowerCase() === 'laboratorio');
 
-    const planValues = laboratorySelectedPlanOptions.map((opt: OptionType) => opt.value);
-    laboratories = laboratories.filter(lab => planValues.includes(lab.nomePlano));
+    // Filter by the selected plan
+    laboratories = laboratories.filter(lab => lab.nomePlano === laboratorySelectedPlanOption.value);
 
     if (laboratoryNameQuery.trim() !== '') {
       laboratories = laboratories.filter(lab =>
@@ -63,7 +65,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       );
     }
     return laboratories;
-  }, [partnersData, laboratorySelectedPlanOptions, laboratoryNameQuery]);
+  }, [partnersData, laboratorySelectedPlanOption, laboratoryNameQuery]);
 
   return (
     <div className="my-12">
@@ -97,16 +99,16 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
             <label htmlFor="hospitalPlanFilter" className="block text-sm font-medium text-gray-700 mb-1">
               Filtrar Plano (Hospitais):
             </label>
-            <Select<OptionType, true>
+            <Select<OptionType, false>
               id="hospitalPlanFilter"
               options={uniquePlansFromPartners}
-              isMulti
-              onChange={setHospitalSelectedPlanOptions}
-              value={hospitalSelectedPlanOptions}
-              className="mt-1 basic-multi-select"
+              onChange={(option) => setHospitalSelectedPlanOption(option)}
+              value={hospitalSelectedPlanOption}
+              className="mt-1 basic-single-select"
               classNamePrefix="select"
-              placeholder="Todos os planos"
+              placeholder="Selecione um plano"
               noOptionsMessage={() => 'Nenhum plano disponível'}
+              isClearable
             />
           </div>
         </div>
@@ -115,7 +117,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
         data={hospitalData} 
         title="Hospitais" 
         isLoading={isLoading} 
-        emptyMessage={hospitalSelectedPlanOptions.length === 0 ? "Selecione um plano para visualizar os hospitais disponíveis." : undefined}
+        emptyMessage={!hospitalSelectedPlanOption ? "Selecione um plano para visualizar os hospitais disponíveis." : undefined}
       />
 
       {/* Filtros e Tabela de Laboratórios */}
@@ -139,16 +141,16 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
             <label htmlFor="laboratoryPlanFilter" className="block text-sm font-medium text-gray-700 mb-1">
               Filtrar Plano (Laboratórios):
             </label>
-            <Select<OptionType, true>
+            <Select<OptionType, false>
               id="laboratoryPlanFilter"
               options={uniquePlansFromPartners}
-              isMulti
-              onChange={setLaboratorySelectedPlanOptions}
-              value={laboratorySelectedPlanOptions}
-              className="mt-1 basic-multi-select"
+              onChange={(option) => setLaboratorySelectedPlanOption(option)}
+              value={laboratorySelectedPlanOption}
+              className="mt-1 basic-single-select"
               classNamePrefix="select"
-              placeholder="Todos os planos"
+              placeholder="Selecione um plano"
               noOptionsMessage={() => 'Nenhum plano disponível'}
+              isClearable
             />
           </div>
         </div>
@@ -157,7 +159,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
         data={laboratoryData} 
         title="Laboratórios" 
         isLoading={isLoading} 
-        emptyMessage={laboratorySelectedPlanOptions.length === 0 ? "Selecione um plano para visualizar os laboratórios disponíveis." : undefined}
+        emptyMessage={!laboratorySelectedPlanOption ? "Selecione um plano para visualizar os laboratórios disponíveis." : undefined}
       />
     </div>
   );
