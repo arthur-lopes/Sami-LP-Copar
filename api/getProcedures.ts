@@ -43,7 +43,7 @@ const formatSheetData = (values: any[][]): ProcedureData[] => {
     'Regra de Isenção': 'regraIsencao',
     '% Valor do Procedimento': 'percentualProcedimento',
     'Valor Limitador': 'valorLimitador', // Added back
-    'Preferencial Credenciada': 'preferencialCredenciada',
+    'Valor Rede Preferencial': 'preferencialCredenciada',
     'Nome do Plano': 'nomePlano',
   };
 
