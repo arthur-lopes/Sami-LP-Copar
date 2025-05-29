@@ -157,11 +157,11 @@ function App() {
             />
 
             <div className="mb-4 text-sm text-gray-500">
-              {loading ? (
+              {/* {loading ? (
                 "Carregando dados de procedimentos..."
               ) : (
                 `Exibindo ${filteredData.length} de ${data.length} procedimentos`
-              )}
+              )} */}
               {partnersLoading && <p className="text-sm text-gray-500 mt-1">Carregando dados de parceiros...</p>}
               {!partnersLoading && partnersError && <p className="text-sm text-red-500 mt-1">{partnersError}</p>}
               {/* Removed partner count from here as it's implicitly shown by the tables themselves */}

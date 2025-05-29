@@ -61,7 +61,15 @@ const PartnerTable: React.FC<PartnerTableProps> = ({ data, title, isLoading, emp
     return (
       <div className="mt-8">
         <h3 className="text-xl font-semibold text-gray-800 mb-4">{title}</h3>
-        <p className="text-gray-600">{emptyMessage || `Nenhum dado encontrado para ${title.toLowerCase()}.`}</p>
+        <div className="bg-white border-l-4 border-gray-400 p-4 mb-6 shadow-sm">
+          <div className="flex">
+            <div className="ml-3">
+              <p className="text-sm text-gray-700">
+                {emptyMessage || `Nenhum dado encontrado para ${title.toLowerCase()}.`}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -115,7 +115,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       </div>
       <PartnerTable 
         data={hospitalData} 
-        title="Hospitais" 
+        // title="Hospitais" 
         isLoading={isLoading} 
         emptyMessage={!hospitalSelectedPlanOption ? "Selecione um plano para visualizar os hospitais disponíveis." : undefined}
       />
@@ -157,7 +157,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       </div>
       <PartnerTable 
         data={laboratoryData} 
-        title="Laboratórios" 
+        // title="Laboratórios" 
         isLoading={isLoading} 
         emptyMessage={!laboratorySelectedPlanOption ? "Selecione um plano para visualizar os laboratórios disponíveis." : undefined}
       />

@@ -114,8 +114,16 @@ const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessa
   // If no plan is selected, show a message
   if (!selectedPlan) {
     return (
-      <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-        <p className="text-gray-500">{emptyMessage || "Selecione um plano para visualizar os procedimentos disponíveis."}</p>
+      <div>
+        <div className="bg-white border-l-4 border-gray-400 p-4 mb-6 shadow-sm">
+          <div className="flex">
+            <div className="ml-3">
+              <p className="text-sm text-gray-700">
+                {emptyMessage || "Selecione um plano para visualizar os procedimentos disponíveis."}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

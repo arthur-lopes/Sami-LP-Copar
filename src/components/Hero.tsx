@@ -5,7 +5,7 @@ const Hero: React.FC = () => {
     <section className="bg-gradient-to-r from-[#FF5751] to-[#FF5751] text-white py-24 md:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
-          <h1 className="text-5xl md:text-6xl font-black mb-4">
+          <h1 className="text-5xl md:text-6xl font-black mb-10">
             Coparticipação
           </h1>
           <p className="text-lg md:text-xl opacity-90 mb-6">
