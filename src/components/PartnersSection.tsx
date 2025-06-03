@@ -23,9 +23,23 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
   const [hospitalSelectedPlanOption, setHospitalSelectedPlanOption] = useState<SingleOptionType>(null);
   const [laboratorySelectedPlanOption, setLaboratorySelectedPlanOption] = useState<SingleOptionType>(null);
 
-  const uniquePlansFromPartners = useMemo(() => {
+  // Planos únicos que possuem hospitais
+  const uniqueHospitalPlans = useMemo(() => {
     if (!partnersData) return [];
-    const plans = new Set(partnersData.map(p => p.nomePlano));
+    const hospitalPartners = partnersData.filter(p => 
+      p.tipo && p.tipo.toLowerCase() === 'hospital'
+    );
+    const plans = new Set(hospitalPartners.map(p => p.nomePlano));
+    return Array.from(plans).sort().map(plan => ({ value: plan, label: plan }));
+  }, [partnersData]);
+
+  // Planos únicos que possuem laboratórios
+  const uniqueLaboratoryPlans = useMemo(() => {
+    if (!partnersData) return [];
+    const laboratoryPartners = partnersData.filter(p => 
+      p.tipo && (p.tipo.toLowerCase() === 'laboratório' || p.tipo.toLowerCase() === 'laboratorio')
+    );
+    const plans = new Set(laboratoryPartners.map(p => p.nomePlano));
     return Array.from(plans).sort().map(plan => ({ value: plan, label: plan }));
   }, [partnersData]);
 
@@ -35,14 +49,16 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       return [];
     }
     
-    let hospitals = partnersData.filter(p => p.tipo.toLowerCase() === 'hospital');
+    let hospitals = partnersData.filter(p => 
+      p.tipo && p.tipo.toLowerCase() === 'hospital'
+    );
 
     // Filter by the selected plan
     hospitals = hospitals.filter(hospital => hospital.nomePlano === hospitalSelectedPlanOption.value);
 
     if (hospitalNameQuery.trim() !== '') {
       hospitals = hospitals.filter(hospital =>
-        hospital.nomeParceiro.toLowerCase().includes(hospitalNameQuery.toLowerCase())
+        hospital.nomeParceiro && hospital.nomeParceiro.toLowerCase().includes(hospitalNameQuery.toLowerCase())
       );
     }
     return hospitals;
@@ -54,14 +70,16 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       return [];
     }
     
-    let laboratories = partnersData.filter(p => p.tipo.toLowerCase() === 'laboratório' || p.tipo.toLowerCase() === 'laboratorio');
+    let laboratories = partnersData.filter(p => 
+      p.tipo && (p.tipo.toLowerCase() === 'laboratório' || p.tipo.toLowerCase() === 'laboratorio')
+    );
 
     // Filter by the selected plan
     laboratories = laboratories.filter(lab => lab.nomePlano === laboratorySelectedPlanOption.value);
 
     if (laboratoryNameQuery.trim() !== '') {
       laboratories = laboratories.filter(lab =>
-        lab.nomeParceiro.toLowerCase().includes(laboratoryNameQuery.toLowerCase())
+        lab.nomeParceiro && lab.nomeParceiro.toLowerCase().includes(laboratoryNameQuery.toLowerCase())
       );
     }
     return laboratories;
@@ -101,7 +119,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
             </label>
             <Select<OptionType, false>
               id="hospitalPlanFilter"
-              options={uniquePlansFromPartners}
+              options={uniqueHospitalPlans}
               onChange={(option) => setHospitalSelectedPlanOption(option)}
               value={hospitalSelectedPlanOption}
               className="mt-1 basic-single-select"
@@ -115,7 +133,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       </div>
       <PartnerTable 
         data={hospitalData} 
-        // title="Hospitais" 
+        title="Hospitais" 
         isLoading={isLoading} 
         emptyMessage={!hospitalSelectedPlanOption ? "Selecione um plano para visualizar os hospitais disponíveis." : undefined}
       />
@@ -143,7 +161,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
             </label>
             <Select<OptionType, false>
               id="laboratoryPlanFilter"
-              options={uniquePlansFromPartners}
+              options={uniqueLaboratoryPlans}
               onChange={(option) => setLaboratorySelectedPlanOption(option)}
               value={laboratorySelectedPlanOption}
               className="mt-1 basic-single-select"
@@ -157,7 +175,7 @@ const PartnersSection: React.FC<PartnersSectionProps> = ({ partnersData, isLoadi
       </div>
       <PartnerTable 
         data={laboratoryData} 
-        // title="Laboratórios" 
+        title="Laboratórios" 
         isLoading={isLoading} 
         emptyMessage={!laboratorySelectedPlanOption ? "Selecione um plano para visualizar os laboratórios disponíveis." : undefined}
       />
