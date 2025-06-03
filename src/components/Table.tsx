@@ -80,8 +80,8 @@ const Table: React.FC<TableProps> = ({ data, isLoading, selectedPlan, emptyMessa
         return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
       }
       
-      const aString = String(aValue).toLowerCase();
-      const bString = String(bValue).toLowerCase();
+      const aString = (aValue ? String(aValue) : '').toLowerCase();
+      const bString = (bValue ? String(bValue) : '').toLowerCase();
       
       return sortDirection === 'asc'
         ? aString.localeCompare(bString)

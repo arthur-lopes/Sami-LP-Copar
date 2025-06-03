@@ -33,10 +33,10 @@ export const filterData = (data: ProcedureData[], filters: FilterState): Procedu
     if (filters.searchQuery) {
       const query = filters.searchQuery.toLowerCase();
       return (
-        item.codigoProcedimento.toLowerCase().includes(query) ||
-        item.procedimento.toLowerCase().includes(query) ||
-        item.classificacao.toLowerCase().includes(query) ||
-        item.regraIsencao.toLowerCase().includes(query)
+        (item.codigoProcedimento && item.codigoProcedimento.toLowerCase().includes(query)) ||
+        (item.procedimento && item.procedimento.toLowerCase().includes(query)) ||
+        (item.classificacao && item.classificacao.toLowerCase().includes(query)) ||
+        (item.regraIsencao && item.regraIsencao.toLowerCase().includes(query))
       );
     }
     
